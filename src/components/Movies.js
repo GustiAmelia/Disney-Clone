@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { selectMovies } from '../features/movie/movieSlice';
 
@@ -14,7 +15,10 @@ function Movies() {
         {
           movies?.filter((movie) => {return movie.type === 'new'}).map((movie, index) => (
             <Wrap key={index}>
-              <img src={movie.cardImg} alt='...'/>
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt='...'/>
+              </Link>
+              
             </Wrap>
           ))
         }
@@ -25,7 +29,9 @@ function Movies() {
         {
           movies?.filter((movie) => {return movie.type === 'recommend'}).map((movie, index) => (
             <Wrap key={index}>
-              <img src={movie.cardImg} alt='...'/>
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt='...'/>
+              </Link>
             </Wrap>
           ))
         }
@@ -36,7 +42,9 @@ function Movies() {
         {
           movies?.filter((movie) => {return movie.type === 'trending'}).map((movie, index) => (
             <Wrap key={index}>
-              <img src={movie.cardImg} alt='...'/>
+              <Link to={`/detail/${movie.id}`}>
+                <img src={movie.cardImg} alt='...'/>
+              </Link>
             </Wrap>
           ))
         }
