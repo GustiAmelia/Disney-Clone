@@ -1,35 +1,45 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { selectMovies } from '../features/movie/movieSlice';
 
 function Movies() {
+
+  const movies = useSelector(selectMovies);
+
   return (
     <Container>
+      <h4>New to Disney+</h4>
+      <Content>
+        {
+          movies?.filter((movie) => {return movie.type === 'new'}).map((movie, index) => (
+            <Wrap key={index}>
+              <img src={movie.cardImg} alt='...'/>
+            </Wrap>
+          ))
+        }
+      </Content>
+
       <h4>Recommended for You</h4>
       <Content>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
-        <Wrap>
-          <img src='https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6EA416AD3B15FCC1BADC817A932A57FFF707556DB2233FFCB4CFEB7C8EEDE23C/scale?width=400&aspectRatio=1.78&format=jpeg'/>
-        </Wrap>
+        {
+          movies?.filter((movie) => {return movie.type === 'recommend'}).map((movie, index) => (
+            <Wrap key={index}>
+              <img src={movie.cardImg} alt='...'/>
+            </Wrap>
+          ))
+        }
+      </Content>
+
+      <h4>Trending</h4>
+      <Content>
+        {
+          movies?.filter((movie) => {return movie.type === 'trending'}).map((movie, index) => (
+            <Wrap key={index}>
+              <img src={movie.cardImg} alt='...'/>
+            </Wrap>
+          ))
+        }
       </Content>
     </Container>
   )
