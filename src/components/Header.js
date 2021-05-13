@@ -1,39 +1,95 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+import { selectName, selectPhoto, setSignOut, setUserLogin } from '../features/user/userSlice';
+import { auth, provider } from '../firebase';
+
 
 function Header() {
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const name = useSelector(selectName);
+  const photo = useSelector(selectPhoto);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if(user) {
+        dispatch(setUserLogin({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        }));
+        history.push('/')
+      }
+    })
+  },[])
+
+  const signIn = () => {
+    auth.signInWithPopup(provider)
+    .then((result) => {
+      let user = result.user;
+      dispatch(setUserLogin({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+      }));
+      history.push('/')
+    })
+  }
+
+  const signOut = () => {
+    auth.signOut()
+    .then(() => {
+      dispatch(setSignOut());
+      history.push('/login')
+    })
+  }
+  
   return (
     <Nav>
       <Logo src='/images/logo.svg'/>
 
-      <NavMenu>
-        <a>
-          <img src='/images/home-icon.svg' alt='...'/>
-          <span>HOME</span>
-        </a>
-        <a>
-          <img src='/images/search-icon.svg' alt='...'/>
-          <span>SEARCH</span>
-        </a>
-        <a>
-          <img src='/images/watchlist-icon.svg' alt='...'/>
-          <span>WATCHLIST</span>
-        </a>
-        <a>
-          <img src='/images/original-icon.svg' alt='...'/>
-          <span>ORIGINALS</span>
-        </a>
-        <a>
-          <img src='/images/movie-icon.svg' alt='...'/>
-          <span>MOVIES</span>
-        </a>
-        <a>
-          <img src='/images/series-icon.svg' alt='...'/>
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
+      {
+        !name ? (
+          <LoginContainer>
+            <Login onClick={signIn}>Login</Login>
+          </LoginContainer>
+        ) : (
+          <>
+            <NavMenu>
+              <a>
+                <img src='/images/home-icon.svg' alt='...'/>
+                <span>HOME</span>
+              </a>
+              <a>
+                <img src='/images/search-icon.svg' alt='...'/>
+                <span>SEARCH</span>
+              </a>
+              <a>
+                <img src='/images/watchlist-icon.svg' alt='...'/>
+                <span>WATCHLIST</span>
+              </a>
+              <a>
+                <img src='/images/original-icon.svg' alt='...'/>
+                <span>ORIGINALS</span>
+              </a>
+              <a>
+                <img src='/images/movie-icon.svg' alt='...'/>
+                <span>MOVIES</span>
+              </a>
+              <a>
+                <img src='/images/series-icon.svg' alt='...'/>
+                <span>SERIES</span>
+              </a>
+            </NavMenu>
 
-      <UserImg src='https://upload.wikimedia.org/wikipedia/commons/9/9e/Jungkook_for_Dispatch_%22Boy_With_Luv%22_MV_behind_the_scene_shooting%2C_15_March_2019_07_%28cropped%29.jpg'/>
+            <UserImg onClick={signOut} src={photo}/>
+          </>
+        )
+      }
     </Nav>
   )
 }
@@ -93,7 +149,6 @@ const NavMenu = styled.div`
       span:after {
         opacity:1;
         transform :scaleX(1);
-        
       }
     }
   }
@@ -105,5 +160,26 @@ const UserImg = styled.img`
   border-radius:50%;
   object-fit :cover;
   cursor:pointer;
+`
 
+const Login = styled.div`
+  border: 1px solid #f9f9f9;
+  padding : 8px 18px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+  text-transform:uppercase;
+  background-color:rgba(0, 0, 0, 0.6);
+  transtition: all 0.2s ease 0s;
+  cursor:pointer;
+
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color:transparent;
+  }
+`
+const LoginContainer = styled.div`
+  flex:1;
+  display:flex;
+  justify-content:flex-end;
 `
